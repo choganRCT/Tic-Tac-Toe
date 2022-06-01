@@ -13,7 +13,6 @@ namespace Tic_Tac_Toe
             //The game plays until win, lose or draw
             while (true)
             {
-                //Console.Clear();
                 Console.WriteLine();
                 Print(board);
 
@@ -25,13 +24,22 @@ namespace Tic_Tac_Toe
                 Console.Write("Please enter column: ");
                 int col = Convert.ToInt32(Console.ReadLine());
 
-                if (board[row, col] == 'X' || board[row, col] == 'O')
+                while (row < 0 || row > 2 || col < 0 || col > 2)
+                {
+                    Console.WriteLine($"Coordinates {col},{row} are not on the board. Please enter new coordinates.");
+                    Console.Write("Please enter row: ");
+                    row = Convert.ToInt32(Console.ReadLine());
+                    Console.Write("Please enter column: ");
+                    col = Convert.ToInt32(Console.ReadLine());
+                }
+
+                while (board[row, col] == 'X' || board[row, col] == 'O')
                 {
                     Console.WriteLine("This space contains " + board[row, col] + ". Please select a new row.");
                     Console.Write("Please enter row: ");
-                    int row2 = Convert.ToInt32(Console.ReadLine());
+                    row = Convert.ToInt32(Console.ReadLine());
                     Console.Write("Please enter column: ");
-                    int col2 = Convert.ToInt32(Console.ReadLine());
+                    col = Convert.ToInt32(Console.ReadLine());
                 }
 
                 board[row, col] = player;
@@ -124,7 +132,13 @@ namespace Tic_Tac_Toe
 
                 for (int col = 0; col < 3; col++)
                 {
-                    Console.Write(board[row, col]);
+                    char value = board[row, col];
+                    if (value == '\0')
+                    {
+                        value = ' ';
+                    }
+
+                    Console.Write(value);
                     Console.Write(" | ");
 
                 }
