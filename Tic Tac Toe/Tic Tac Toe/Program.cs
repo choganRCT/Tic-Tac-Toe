@@ -13,47 +13,43 @@ namespace Tic_Tac_Toe
             //The game plays until win, lose or draw
             while (true)
             {
-                
                 //Console.Clear();
                 Console.WriteLine();
                 Print(board);
 
                 Console.WriteLine();
                 Console.WriteLine("It is " + player + "'s turn.");
-                
+
                 Console.Write("Please enter row: ");
                 int row = Convert.ToInt32(Console.ReadLine());
                 Console.Write("Please enter column: ");
                 int col = Convert.ToInt32(Console.ReadLine());
 
-                if (board[row, col] == 'X' || board[row,col] == 'O')
+                if (board[row, col] == 'X' || board[row, col] == 'O')
                 {
                     Console.WriteLine("This space contains " + board[row, col] + ". Please select a new row.");
                     Console.Write("Please enter row: ");
                     int row2 = Convert.ToInt32(Console.ReadLine());
                     Console.Write("Please enter column: ");
-                    int col2 = Convert.ToInt32(Console.ReadLine()); 
+                    int col2 = Convert.ToInt32(Console.ReadLine());
                 }
-                    board[row, col] = player;
 
+                board[row, col] = player;
 
                 //Check for winner horizontal
-                if (player == board[0, 0] && player == board[0,1] && player == board[0, 2])
-                    
+                if (player == board[0, 0] && player == board[0, 1] && player == board[0, 2])
                 {
                     Console.WriteLine(player + " has won!");
                     Print(board);
                     break;
                 }
                 if (player == board[1, 0] && player == board[1, 1] && player == board[1, 2])
-
                 {
                     Console.WriteLine(player + " has won!");
                     Print(board);
                     break;
                 }
                 if (player == board[2, 0] && player == board[2, 1] && player == board[2, 2])
-
                 {
                     Console.WriteLine(player + " has won!");
                     Print(board);
@@ -62,21 +58,18 @@ namespace Tic_Tac_Toe
 
                 //Check for winner vertical
                 if (player == board[0, 0] && player == board[1, 0] && player == board[2, 0])
-
                 {
                     Console.WriteLine(player + " has won!");
                     Print(board);
                     break;
                 }
                 if (player == board[0, 1] && player == board[1, 1] && player == board[2, 1])
-
                 {
                     Console.WriteLine(player + " has won!");
                     Print(board);
                     break;
                 }
                 if (player == board[0, 2] && player == board[1, 2] && player == board[2, 2])
-
                 {
                     Console.WriteLine(player + " has won!");
                     Print(board);
@@ -85,19 +78,18 @@ namespace Tic_Tac_Toe
 
                 //Check for winner Diagonal
                 if (player == board[0, 0] && player == board[1, 1] && player == board[2, 2])
-
                 {
                     Console.WriteLine(player + " has won!");
                     Print(board);
                     break;
                 }
                 if (player == board[0, 2] && player == board[1, 1] && player == board[2, 0])
-
                 {
                     Console.WriteLine(player + " has won!");
                     Print(board);
                     break;
                 }
+
                 movesPlayed = movesPlayed + 1;
 
                 if (movesPlayed == 9)
@@ -105,12 +97,10 @@ namespace Tic_Tac_Toe
                     Console.WriteLine("Draw");
                     break;
                 }
-                
-                player = ChangeTurn(player);
 
+                player = ChangeTurn(player);
             }
-            
-           
+
             Console.ReadLine();
         }
         static char ChangeTurn(char currentPlayer)
@@ -131,12 +121,12 @@ namespace Tic_Tac_Toe
             for (int row = 0; row < 3; row++)
             {
                 Console.Write(row + " | ");
-              
+
                 for (int col = 0; col < 3; col++)
                 {
                     Console.Write(board[row, col]);
                     Console.Write(" | ");
-                    
+
                 }
                 Console.WriteLine();
             }
