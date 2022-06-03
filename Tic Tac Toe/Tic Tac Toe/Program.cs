@@ -4,12 +4,19 @@ namespace Tic_Tac_Toe
 {
     class Program
     {
+        // (2), (3)
+        static string[] space = new string[9] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
         static void Main(string[] args)
         {
             string player = "X";
-            int choice = 0, winner = 0, turnCount = 0;
-            bool correctInput = false, legalMove = true, gamePlay = true;
-
+            // (1)
+            int choice = 0;
+            int winner = 0;
+            int turnCount = 0;
+            bool correctInput = false;
+            bool legalMove = true;
+            bool gamePlay = true;
 
             //The game plays until win, lose or draw.
             while (gamePlay == true)
@@ -46,7 +53,8 @@ namespace Tic_Tac_Toe
                         }
                     }
 
-                    if (space[choice] == "X" || space[choice] == "O")
+                    // (3)
+                    if (space[choice - 1] == "X" || space[choice - 1] == "O")
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine($"\n{choice} is already taken.");
@@ -57,7 +65,9 @@ namespace Tic_Tac_Toe
                     }
                     else
                     {
-                        space[choice] = player;
+                        // (3)
+                        space[choice - 1] = player;
+
                         legalMove = true;
                         turnCount++;
                         winner = CheckWin();
@@ -70,10 +80,11 @@ namespace Tic_Tac_Toe
                             Console.WriteLine("\n Press Enter to start a new game.");
                             Console.ReadLine();
 
+                            // (3)
                             //reset board
-                            for (int i = 0; i < 10; i++)
+                            for (int i = 0; i < 9; i++)
                             {
-                                space[i] = i.ToString();
+                                space[i] = (i + 1).ToString();
                             }
 
                         }
@@ -94,27 +105,34 @@ namespace Tic_Tac_Toe
                         Console.WriteLine("\n Press Enter to start a new game.");
                         Console.ReadLine();
 
+                        // (3)
                         //reset board
-                        for (int i = 0; i < 10; i++)
+                        for (int i = 0; i < 9; i++)
                         {
-                            space[i] = i.ToString();
+                            space[i] = (i + 1).ToString();
                         }
                     }
                 }
             }
-        }
+        } // (4)
+
         static int CheckWin()
         {
+            // (3)
             //Check 3 horizontal rows, 3 vertical rows, 2 diagonals
-            if (space[1] == space[2] && space[2] == space[3])
+            if (space[0] == space[1] && space[1] == space[2])
             {
                 return 1;
             }
-            else if (space[4] == space[5] && space[5] == space[6])
+            else if (space[3] == space[4] && space[4] == space[5])
             {
                 return 1;
             }
-            else if (space[7] == space[8] && space[8] == space[9])
+            else if (space[6] == space[7] && space[7] == space[8])
+            {
+                return 1;
+            }
+            else if (space[0] == space[3] && space[3] == space[6])
             {
                 return 1;
             }
@@ -126,15 +144,11 @@ namespace Tic_Tac_Toe
             {
                 return 1;
             }
-            else if (space[3] == space[6] && space[6] == space[9])
+            else if (space[0] == space[4] && space[4] == space[8])
             {
                 return 1;
             }
-            else if (space[1] == space[5] && space[5] == space[9])
-            {
-                return 1;
-            }
-            else if (space[3] == space[5] && space[5] == space[7])
+            else if (space[2] == space[4] && space[4] == space[6])
             {
                 return 1;
             }
@@ -142,7 +156,8 @@ namespace Tic_Tac_Toe
             {
                 return 0;
             }
-        }
+        } // (4)
+
         static string ChangeTurn(string Player)
         {
             if (Player == "X")
@@ -153,16 +168,16 @@ namespace Tic_Tac_Toe
             {
                 return "X";
             }
-        }
-        static string[] space = new string[10] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-        //space 0 isn't used
+        } // (4)
+
         static void Board()
         {
-            Console.WriteLine("\t {0} | {1} | {2}", space[1], space[2], space[3]);
+            // (5)
+            Console.WriteLine($"\t {space[0]} | {space[1]} | {space[2]}");
             Console.WriteLine("\t-----------");
-            Console.WriteLine("\t {0} | {1} | {2}", space[4], space[5], space[6]);
+            Console.WriteLine($"\t {space[3]} | {space[4]} | {space[5]}");
             Console.WriteLine("\t-----------");
-            Console.WriteLine("\t {0} | {1} | {2}", space[7], space[8], space[9]);
+            Console.WriteLine($"\t {space[6]} | {space[7]} | {space[8]}");
         }
     }
 }
