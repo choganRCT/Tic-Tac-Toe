@@ -6,130 +6,163 @@ namespace Tic_Tac_Toe
     {
         static void Main(string[] args)
         {
-            char player = 'X';
-            char[,] board = new char[3, 3];
-            int movesPlayed = 0;
+            string player = "X";
+            int choice = 0, winner = 0, turnCount = 0;
+            bool correctInput = false, legalMove = true, gamePlay = true;
 
-            //The game plays until win, lose or draw
-            while (true)
+
+            //The game plays until win, lose or draw.
+            while (gamePlay == true)
             {
-                //Console.Clear();
-                Console.WriteLine();
-                Print(board);
-
-                Console.WriteLine();
-                Console.WriteLine("It is " + player + "'s turn.");
-
-                Console.Write("Please enter row: ");
-                int row = Convert.ToInt32(Console.ReadLine());
-                Console.Write("Please enter column: ");
-                int col = Convert.ToInt32(Console.ReadLine());
-
-                if (board[row, col] == 'X' || board[row, col] == 'O')
+                while (legalMove == true)
                 {
-                    Console.WriteLine("This space contains " + board[row, col] + ". Please select a new row.");
-                    Console.Write("Please enter row: ");
-                    int row2 = Convert.ToInt32(Console.ReadLine());
-                    Console.Write("Please enter column: ");
-                    int col2 = Convert.ToInt32(Console.ReadLine());
-                }
+                    Console.Clear();
+                    Console.WriteLine();
+                    Board();
 
-                board[row, col] = player;
+                    try
+                    {
+                        Console.WriteLine($"\nIt is player {player}'s turn.");
+                        Console.Write("Pick a number from the board to place your mark: ");
+                        choice = Convert.ToInt32(Console.ReadLine());
+                    }
+                    catch (FormatException)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.Write("\nYou did not pick a number on the board. Please pick again: ");
+                        Console.ResetColor();
+                        choice = Convert.ToInt32(Console.ReadLine());
+                    }
 
-                //Check for winner horizontal
-                if (player == board[0, 0] && player == board[0, 1] && player == board[0, 2])
-                {
-                    Console.WriteLine(player + " has won!");
-                    Print(board);
-                    break;
-                }
-                if (player == board[1, 0] && player == board[1, 1] && player == board[1, 2])
-                {
-                    Console.WriteLine(player + " has won!");
-                    Print(board);
-                    break;
-                }
-                if (player == board[2, 0] && player == board[2, 1] && player == board[2, 2])
-                {
-                    Console.WriteLine(player + " has won!");
-                    Print(board);
-                    break;
-                }
+                    while (correctInput == false)
+                    {
+                        if (choice > 0 && choice < 10)
+                        {
+                            correctInput = true;
+                        }
+                        else
+                        {
+                            correctInput = false;
+                        }
+                    }
 
-                //Check for winner vertical
-                if (player == board[0, 0] && player == board[1, 0] && player == board[2, 0])
-                {
-                    Console.WriteLine(player + " has won!");
-                    Print(board);
-                    break;
-                }
-                if (player == board[0, 1] && player == board[1, 1] && player == board[2, 1])
-                {
-                    Console.WriteLine(player + " has won!");
-                    Print(board);
-                    break;
-                }
-                if (player == board[0, 2] && player == board[1, 2] && player == board[2, 2])
-                {
-                    Console.WriteLine(player + " has won!");
-                    Print(board);
-                    break;
-                }
+                    if (space[choice] == "X" || space[choice] == "O")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"\n{choice} is already taken.");
+                        Console.ResetColor();
+                        Console.WriteLine("Press enter to continue.");
+                        Console.ReadLine();
+                        legalMove = false;
+                    }
+                    else
+                    {
+                        space[choice] = player;
+                        legalMove = true;
+                        turnCount++;
+                        winner = CheckWin();
+                        if (winner == 1)
+                        {
+                            gamePlay = false;
+                            Console.Clear();
+                            Console.WriteLine($"\nCongratulations!! {player} has Won!!!\n");
+                            Board();
+                            Console.WriteLine("\n Press Enter to start a new game.");
+                            Console.ReadLine();
 
-                //Check for winner Diagonal
-                if (player == board[0, 0] && player == board[1, 1] && player == board[2, 2])
-                {
-                    Console.WriteLine(player + " has won!");
-                    Print(board);
-                    break;
-                }
-                if (player == board[0, 2] && player == board[1, 1] && player == board[2, 0])
-                {
-                    Console.WriteLine(player + " has won!");
-                    Print(board);
-                    break;
-                }
+                            //reset board
+                            for (int i = 0; i < 10; i++)
+                            {
+                                space[i] = i.ToString();
+                            }
 
-                movesPlayed = movesPlayed + 1;
+                        }
+                        else
+                        {
+                            gamePlay = true;
+                        }
+                        player = ChangeTurn(player);
+                    }
 
-                if (movesPlayed == 9)
-                {
-                    Console.WriteLine("Draw");
-                    break;
+                    if (turnCount == 9)
+                    {
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("\nThe game ended in a draw.\n");
+                        Console.ResetColor();
+                        Board();
+                        Console.WriteLine("\n Press Enter to start a new game.");
+                        Console.ReadLine();
+
+                        //reset board
+                        for (int i = 0; i < 10; i++)
+                        {
+                            space[i] = i.ToString();
+                        }
+                    }
                 }
-
-                player = ChangeTurn(player);
             }
-
-            Console.ReadLine();
         }
-        static char ChangeTurn(char currentPlayer)
+        static int CheckWin()
         {
-            if (currentPlayer == 'X')
+            //Check 3 horizontal rows, 3 vertical rows, 2 diagonals
+            if (space[1] == space[2] && space[2] == space[3])
             {
-                return 'O';
+                return 1;
+            }
+            else if (space[4] == space[5] && space[5] == space[6])
+            {
+                return 1;
+            }
+            else if (space[7] == space[8] && space[8] == space[9])
+            {
+                return 1;
+            }
+            else if (space[1] == space[4] && space[4] == space[7])
+            {
+                return 1;
+            }
+            else if (space[2] == space[5] && space[5] == space[8])
+            {
+                return 1;
+            }
+            else if (space[3] == space[6] && space[6] == space[9])
+            {
+                return 1;
+            }
+            else if (space[1] == space[5] && space[5] == space[9])
+            {
+                return 1;
+            }
+            else if (space[3] == space[5] && space[5] == space[7])
+            {
+                return 1;
             }
             else
             {
-                return 'X';
+                return 0;
             }
         }
-
-        static void Print(char[,] board)
+        static string ChangeTurn(string Player)
         {
-            Console.WriteLine("  | 0 | 1 | 2 |");
-            for (int row = 0; row < 3; row++)
+            if (Player == "X")
             {
-                Console.Write(row + " | ");
-
-                for (int col = 0; col < 3; col++)
-                {
-                    Console.Write(board[row, col]);
-                    Console.Write(" | ");
-
-                }
-                Console.WriteLine();
+                return "O";
             }
+            else
+            {
+                return "X";
+            }
+        }
+        static string[] space = new string[10] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+        //space 0 isn't used
+        static void Board()
+        {
+            Console.WriteLine("\t {0} | {1} | {2}", space[1], space[2], space[3]);
+            Console.WriteLine("\t-----------");
+            Console.WriteLine("\t {0} | {1} | {2}", space[4], space[5], space[6]);
+            Console.WriteLine("\t-----------");
+            Console.WriteLine("\t {0} | {1} | {2}", space[7], space[8], space[9]);
         }
     }
 }
