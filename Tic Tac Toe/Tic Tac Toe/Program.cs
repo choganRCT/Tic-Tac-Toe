@@ -41,27 +41,16 @@ namespace Tic_Tac_Toe
                         choice = Convert.ToInt32(Console.ReadLine());
                     }
 
-                    while (correctInput == false)
-                    {
-                        if (choice > 0 && choice < 10)
-                        {
-                            correctInput = true;
-                        }
-                        else
-                        {
-                            correctInput = false;
-                        }
-                    }
-
                     // (3)
                     if (space[choice - 1] == "X" || space[choice - 1] == "O")
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine($"\n{choice} is already taken.");
                         Console.ResetColor();
-                        Console.WriteLine("Press enter to continue.");
-                        Console.ReadLine();
                         legalMove = false;
+                        Console.Write("Press enter to continue.");
+                        Console.ReadLine();
+                        legalMove = true;
                     }
                     else
                     {
@@ -77,8 +66,9 @@ namespace Tic_Tac_Toe
                             Console.Clear();
                             Console.WriteLine($"\nCongratulations!! {player} has Won!!!\n");
                             Board();
-                            Console.WriteLine("\n Press Enter to start a new game.");
+                            Console.Write("\n Press Enter to start a new game.");
                             Console.ReadLine();
+                            turnCount = 0;
 
                             // (3)
                             //reset board
@@ -104,6 +94,7 @@ namespace Tic_Tac_Toe
                         Board();
                         Console.WriteLine("\n Press Enter to start a new game.");
                         Console.ReadLine();
+                        turnCount = 0;
 
                         // (3)
                         //reset board
