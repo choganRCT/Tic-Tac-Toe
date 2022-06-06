@@ -5,16 +5,15 @@ namespace Tic_Tac_Toe
     class Program
     {
         // (2), (3)
-        static string[] space = new string[9] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+        static readonly string[] space = new string[9] { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
-        static void Main(string[] args)
+        static void Main()
         {
             string player = "X";
             // (1)
-            int choice = 0;
-            int winner = 0;
+            int choice;
+            int winner;
             int turnCount = 0;
-            bool correctInput = false;
             bool legalMove = true;
             bool gamePlay = true;
 
@@ -27,19 +26,42 @@ namespace Tic_Tac_Toe
                     Console.WriteLine();
                     Board();
 
-                    try
+                    Console.WriteLine($"\nIt is player {player}'s turn.");
+                    Console.Write("Pick a number from the board to place your mark: ");
+                    choice = Convert.ToInt32(Console.ReadLine());
+
+                    bool correctNumber = false;
+                    while (!correctNumber)
                     {
-                        Console.WriteLine($"\nIt is player {player}'s turn.");
-                        Console.Write("Pick a number from the board to place your mark: ");
-                        choice = Convert.ToInt32(Console.ReadLine());
+                        try
+                        {
+                            if (choice <= 0 || choice > 9)
+                            {
+                                Console.Clear();
+                                Board();
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("\nYou entered and invalid number.");
+                                Console.ResetColor();
+                                Console.WriteLine($"It is player {player}'s turn.");
+                                Console.Write("Please enter a number between 1 and 9: ");
+                                choice = Convert.ToInt32(Console.ReadLine());
+                            }
+                            else
+                            {
+                                correctNumber = false;
+                                break;
+                            }
+
+                        }
+                        catch (FormatException)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.Write("\nYou did not pick a number on the board. Please pick again: ");
+                            Console.ResetColor();
+                            choice = Convert.ToInt32(Console.ReadLine());
+                        }
                     }
-                    catch (FormatException)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("\nYou did not pick a number on the board. Please pick again: ");
-                        Console.ResetColor();
-                        choice = Convert.ToInt32(Console.ReadLine());
-                    }
+
 
                     // (3)
                     if (space[choice - 1] == "X" || space[choice - 1] == "O")
@@ -47,7 +69,6 @@ namespace Tic_Tac_Toe
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine($"\n{choice} is already taken.");
                         Console.ResetColor();
-                        legalMove = false;
                         Console.Write("Press enter to continue.");
                         Console.ReadLine();
                         legalMove = true;
