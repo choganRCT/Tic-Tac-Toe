@@ -2,19 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Tic_Tac_Toe.TicTacToe.Input;
 using Tic_Tac_Toe.TicTacToe.PlayerControllers;
+using Tic_Tac_Toe.TicTacToe.Rendering;
 
 namespace Tic_Tac_Toe.TicTacToe
 {
     class Game
     {
+        private readonly IInputManager inputManager;
+        private readonly IRenderer renderer;
+
+        public Game(IInputManager inputManager, IRenderer renderer)
+        {
+            this.inputManager = inputManager;
+            this.renderer = renderer;
+        }
+
         public void Play()
         {
             var boardSize = GetBoardSize();
             var board = new Board(boardSize);
 
-            var playerOne = new Player("Player 1", "X", new ConsolePlayerController());
-            var playerTwo = new Player("Player 2", "O", new ConsolePlayerController());
+            var playerOne = new Player("Player 1", "X", new HumanPlayerController(inputManager, renderer));
+            var playerTwo = new Player("Player 2", "O", new AiPlayerController());
 
             var players = new List<Player>() { playerOne, playerTwo };
             int currentPlayerIndex = 0;
@@ -24,10 +35,12 @@ namespace Tic_Tac_Toe.TicTacToe
 
             while (winner == null && !isDraw)
             {
-                PrintBoard(board);
+                renderer.RenderBoard(board);
                 var currentPlayer = players[currentPlayerIndex];
+                renderer.RenderText($"{currentPlayer.Name}'s turn");
                 var nextMove = currentPlayer.GetMove(board);
                 board.PlacePiece(nextMove.X, nextMove.Y, currentPlayer);
+                renderer.RenderText($"{currentPlayer.Name} has placed a piece at ({nextMove.X}, {nextMove.Y})");
                 winner = DetermineWinner(board);
                 isDraw = IsDraw(board);
 
@@ -40,12 +53,12 @@ namespace Tic_Tac_Toe.TicTacToe
 
             if (isDraw)
             {
-                PrintBoard(board);
+                renderer.RenderBoard(board);
                 Console.WriteLine("Draw");
             }
             else
             {
-                PrintBoard(board);
+                renderer.RenderBoard(board);
                 Console.WriteLine($"{winner.Name} has won the game");
             }
         }
@@ -55,9 +68,11 @@ namespace Tic_Tac_Toe.TicTacToe
             var dimensions = board.GetDimensions();
 
             return dimensions
-                .Where(spaces => spaces.All(piece => piece.Type != PieceType.Empty))
-                .Where(spaces => spaces.GroupBy(piece => piece.Owner.Symbol).Count() == 1)
-                .Select(spaces => spaces.First().Owner)
+                .Where(dimension => dimension.Pieces
+                    .All(piece => piece.Type != PieceType.Empty))
+                .Where(dimension => dimension.Pieces
+                    .GroupBy(piece => piece.Owner.Symbol).Count() == 1)
+                .Select(dimension => dimension.Pieces.First().Owner)
                 .FirstOrDefault();
         }
 
@@ -66,7 +81,7 @@ namespace Tic_Tac_Toe.TicTacToe
             var dimensions = board.GetDimensions();
 
             return dimensions
-                .All(spaces => spaces
+                .All(dimension => dimension.Pieces
                     .Where(piece => piece.Type != PieceType.Empty)
                     .GroupBy(piece => piece.Owner.Symbol)
                     .Count() > 1);
@@ -84,28 +99,6 @@ namespace Tic_Tac_Toe.TicTacToe
             }
 
             return value;
-        }
-
-        private void PrintBoard(Board board)
-        {
-            Console.WriteLine();
-
-            Console.WriteLine("  | " + string.Join(" | ", Enumerable.Range(0, board.Size)) + " |");
-
-            for (int y = 0; y < board.Size; y++)
-            {
-                Console.Write(y + " | ");
-
-                for (int x = 0; x < board.Size; x++)
-                {
-                    Console.Write(board[x, y].Type == PieceType.Empty ? " " : board[x, y].Owner.Symbol);
-                    Console.Write(" | ");
-                }
-
-                Console.WriteLine();
-            }
-
-            Console.WriteLine();
         }
     }
 }

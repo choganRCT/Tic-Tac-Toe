@@ -29,14 +29,14 @@ namespace Tic_Tac_Toe.TicTacToe
             {
                 for (int x = 0; x < Size; x++)
                 {
-                    pieces[x, y] = new Piece(PieceType.Empty, null);
+                    pieces[x, y] = new Piece(PieceType.Empty, null, new Vec2(x, y));
                 }
             }
         }
 
         public void PlacePiece(int x, int y, Player owner)
         {
-            pieces[x, y] = new Piece(PieceType.Standard, owner);
+            pieces[x, y] = new Piece(PieceType.Standard, owner, new Vec2(x, y));
         }
 
         public bool LocationIsOnBoard(Vec2 location)
@@ -49,9 +49,9 @@ namespace Tic_Tac_Toe.TicTacToe
             return pieces[location.X, location.Y].Type == PieceType.Empty;
         }
 
-        public IEnumerable<IEnumerable<Piece>> GetDimensions()
+        public IEnumerable<BoardDimension> GetDimensions()
         {
-            var dimensions = new List<List<Piece>>();
+            var dimensions = new List<BoardDimension>();
 
             for (int y = 0; y < Size; y++)
             {
@@ -62,7 +62,7 @@ namespace Tic_Tac_Toe.TicTacToe
                     spaces.Add(pieces[x, y]);
                 }
 
-                dimensions.Add(spaces);
+                dimensions.Add(new BoardDimension(BoardDimensionType.Horizontal, y, spaces));
             }
 
             for (int x = 0; x < Size; x++)
@@ -74,7 +74,7 @@ namespace Tic_Tac_Toe.TicTacToe
                     spaces.Add(pieces[x, y]);
                 }
 
-                dimensions.Add(spaces);
+                dimensions.Add(new BoardDimension(BoardDimensionType.Vertical, x, spaces));
             }
 
             {
@@ -85,7 +85,7 @@ namespace Tic_Tac_Toe.TicTacToe
                     spaces.Add(pieces[x, y]);
                 }
 
-                dimensions.Add(spaces);
+                dimensions.Add(new BoardDimension(BoardDimensionType.DiagonalDown, 0, spaces));
             }
 
             {
@@ -96,7 +96,7 @@ namespace Tic_Tac_Toe.TicTacToe
                     spaces.Add(pieces[x, y]);
                 }
 
-                dimensions.Add(spaces);
+                dimensions.Add(new BoardDimension(BoardDimensionType.DiagonalUp, 0, spaces));
             }
 
             return dimensions;
