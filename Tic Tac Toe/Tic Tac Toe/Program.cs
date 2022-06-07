@@ -11,117 +11,110 @@ namespace Tic_Tac_Toe
         {
             string player = "X";
             // (1)
-            int choice;
             int winner;
             int turnCount = 0;
             bool legalMove = true;
             bool gamePlay = true;
+            //bool correctNumber = false;
 
             //The game plays until win, lose or draw.
             while (gamePlay == true)
             {
                 while (legalMove == true)
                 {
-                    Console.Clear();
-                    Console.WriteLine();
-                    Board();
+                    string choiceText;
+                    bool validInput = false;
 
-                    Console.WriteLine($"\nIt is player {player}'s turn.");
-                    Console.Write("Pick a number from the board to place your mark: ");
-                    choice = Convert.ToInt32(Console.ReadLine());
-
-                    bool correctNumber = false;
-                    while (!correctNumber)
+                    while (!validInput)
                     {
                         try
                         {
-                            if (choice <= 0 || choice > 9)
-                            {
-                                Console.Clear();
-                                Board();
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine("\nYou entered and invalid number.");
-                                Console.ResetColor();
-                                Console.WriteLine($"It is player {player}'s turn.");
-                                Console.Write("Please enter a number between 1 and 9: ");
-                                choice = Convert.ToInt32(Console.ReadLine());
-                            }
-                            else
-                            {
-                                correctNumber = false;
-                                break;
-                            }
-
-                        }
-                        catch (FormatException)
-                        {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Console.Write("\nYou did not pick a number on the board. Please pick again: ");
-                            Console.ResetColor();
-                            choice = Convert.ToInt32(Console.ReadLine());
-                        }
-                    }
-
-
-                    // (3)
-                    if (space[choice - 1] == "X" || space[choice - 1] == "O")
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"\n{choice} is already taken.");
-                        Console.ResetColor();
-                        Console.Write("Press enter to continue.");
-                        Console.ReadLine();
-                        legalMove = true;
-                    }
-                    else
-                    {
-                        // (3)
-                        space[choice - 1] = player;
-
-                        legalMove = true;
-                        turnCount++;
-                        winner = CheckWin();
-                        if (winner == 1)
-                        {
-                            gamePlay = false;
                             Console.Clear();
-                            Console.WriteLine($"\nCongratulations!! {player} has Won!!!\n");
+                            Console.WriteLine();
                             Board();
-                            Console.Write("\n Press Enter to start a new game.");
-                            Console.ReadLine();
-                            turnCount = 0;
+                            Console.WriteLine($"\nIt is player {player}'s turn.");
+                            Console.Write("Pick a number from the board to place your mark: ");
+                            choiceText = Console.ReadLine();
 
-                            // (3)
-                            //reset board
-                            for (int i = 0; i < 9; i++)
+                            bool isParsable = Int32.TryParse(choiceText, out int choice);
+                            if (isParsable)
                             {
-                                space[i] = (i + 1).ToString();
+                                if (choice <= 0 || choice > 9)
+                                {
+                                    validInput = true;
+                                }
+                                else
+                                {
+                                    validInput = false;
+
+                                    // (3)
+                                    if (space[choice - 1] == "X" || space[choice - 1] == "O")
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine($"\n{choice} is already taken.");
+                                        Console.ResetColor();
+                                        Console.Write("Press enter to continue.");
+                                        Console.ReadLine();
+                                        legalMove = true;
+                                    }
+                                    else
+                                    {
+                                        // (3)
+                                        space[choice - 1] = player;
+
+                                        legalMove = true;
+                                        turnCount++;
+                                        winner = CheckWin();
+
+                                        if (winner == 1)
+                                        {
+                                            gamePlay = false;
+                                            Console.Clear();
+                                            Console.WriteLine($"\nCongratulations!! {player} has Won!!!\n");
+                                            Board();
+                                            Console.Write("\n Press Enter to start a new game.");
+                                            Console.ReadLine();
+                                            turnCount = 0;
+
+                                            // (3)
+                                            //reset board
+                                            for (int i = 0; i < 9; i++)
+                                            {
+                                                space[i] = (i + 1).ToString();
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            gamePlay = true;
+                                        }
+                                        player = ChangeTurn(player);
+
+                                        if (turnCount == 9)
+                                        {
+                                            Console.Clear();
+                                            Console.ForegroundColor = ConsoleColor.Red;
+                                            Console.WriteLine("\nThe game ended in a draw.\n");
+                                            Console.ResetColor();
+                                            Board();
+                                            Console.WriteLine("\n Press Enter to start a new game.");
+                                            Console.ReadLine();
+                                            turnCount = 0;
+
+                                            // (3)
+                                            //reset board
+                                            for (int i = 0; i < 9; i++)
+                                            {
+                                                space[i] = (i + 1).ToString();
+                                            }
+                                        }
+                                    }
+                                }
                             }
-
                         }
-                        else
+                        catch
                         {
-                            gamePlay = true;
-                        }
-                        player = ChangeTurn(player);
-                    }
-
-                    if (turnCount == 9)
-                    {
-                        Console.Clear();
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("\nThe game ended in a draw.\n");
-                        Console.ResetColor();
-                        Board();
-                        Console.WriteLine("\n Press Enter to start a new game.");
-                        Console.ReadLine();
-                        turnCount = 0;
-
-                        // (3)
-                        //reset board
-                        for (int i = 0; i < 9; i++)
-                        {
-                            space[i] = (i + 1).ToString();
+                            validInput = true;
                         }
                     }
                 }
